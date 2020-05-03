@@ -1,0 +1,25 @@
+{
+  "name": "ca_restful",
+  "version": "1.0.0",
+  "description": "tp04",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon config/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MicaSchejner/ca_restful.git"
+  },
+  "author": "Micaela Schejner Aquino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MicaSchejner/ca_restful/issues"
+  },
+  "homepage": "https://github.com/MicaSchejner/ca_restful#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3",
+    "underscore": "^1.10.2"
+  }
+}

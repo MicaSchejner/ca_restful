@@ -1,6 +1,7 @@
 
 const _ = require('underscore');
 const fs = require('fs');
+const alumnoModel = require('./../models/alumnoModel');
 
 exports.getAlumnos = (req, res) => {
     const alumnos = JSON.parse(fs.readFileSync('./datos/alumnosDatos.json'));
@@ -52,31 +53,27 @@ exports.agregarAlumnos = async (req, res, next) => {
     try {
         const alumnos = JSON.parse(fs.readFileSync('./datos/alumnosDatos.json'));
         const alumno = alumnos.find(alumno => alumno.dni === Number(req.body.dni));
-        console.log(req.params);
         if (alumno) {
             var error = {};
             error.mensaje = 'Alumno ya existe';
             res.status(403).json({"mensaje" : error});
         }else{
-            if (req.body.id && req.body.nombre && req.body.apellido && req.body.dni && req.body.edad) {
-                const nuevoAlumno = {
-                    id: req.body.id,
-                    nombre: req.body.nombre,
-                    apellido: req.body.apellido,
-                    dni: req.body.dni,
-                    edad: req.body.edad,
-                  };
-                  alumnos.push(nuevoAlumno);
-                  fs.writeFileSync('./datos/alumnosDatos.json', JSON.stringify(alumnos));
-                  res.status(201).json({
-                      "mensaje" : "Alumno creado correctamente",
-                      "alumno" : nuevoAlumno 
-                    });
-                
-            }else{
+
+            var alumnoValidacion =  alumnoModel.validarAlumno(req.body);
+
+            if (alumnoValidacion.error) {
                 var error = {};
                 error.mensaje = 'Request incorrecto';
                 res.status(400).json({"mensaje" : error});
+                
+            }else{
+                alumnos.push(alumnoValidacion.alumno);
+                fs.writeFileSync('./datos/alumnosDatos.json', JSON.stringify(alumnos));
+                res.status(201).json({
+                    "mensaje" : "Alumno creado correctamente",
+                    "alumno" : alumnoValidacion.alumno 
+                    });
+
             }
             
         }
@@ -103,19 +100,31 @@ exports.modificarAlumnoPorId = (req, res,next) => {
                 dni: req.body.dni,
                 edad: req.body.edad,
               };
+
+              var alumnoValidacion =  alumnoModel.validarAlumno(nuevaDataAlumno);
+              
               const modificacion = alumnos.map(alumnoModificado => {
-                  if (alumnoModificado.id === Number(req.params.id)) {
-                      return nuevaDataAlumno;
-                  } else {
-                      return alumnoModificado;
-                  }
-              });
-      
-              fs.writeFileSync('./datos/alumnosDatos.json', JSON.stringify(modificacion));
-              res.status(201).json({
-                    "mensaje": "Alumno actualizado correctamente",
-                    "alumno" : nuevaDataAlumno
+                    if (alumnoModificado.id === Number(req.params.id)) {
+                        return alumnoValidacion.alumno;
+                    } else {
+                        return alumnoModificado;
+                    }
                 });
+                
+              if (alumnoValidacion.error) {
+                  var error = {};
+                  error.mensaje = 'Request incorrecto';
+                  res.status(400).json({"mensaje" : alumnoValidacion.resultado});
+                  
+              }else{
+                    fs.writeFileSync('./datos/alumnosDatos.json', JSON.stringify(modificacion));
+                    res.status(201).json({
+                        "mensaje": "Alumno actualizado correctamente",
+                        "alumno" : modificacion
+                    });
+  
+              }
+              
         }
         
       } catch (e) {

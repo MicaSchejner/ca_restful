@@ -56,6 +56,7 @@ _Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para 
 * [Express](https://expressjs.com/es/) - Infraestructura web.
 * [NPM](https://www.npmjs.com/) - Manejador de paquetes.
 * [Nodemon](https://nodemon.io/) - Usado para no tener que reiniciar servidor mientras se desarrolla.
+* [@Hapi](https://hapi.dev/) - Framework.
 
 
 ## Versionado 📌

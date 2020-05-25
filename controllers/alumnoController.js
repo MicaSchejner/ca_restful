@@ -48,7 +48,7 @@ exports.getAlumnosPorDni = (req, res,next) => {
 
 }
 
-exports.agregarAlumnos = async (req, res, next) => {
+exports.agregarAlumnos = (req, res, next) => {
 
     try {
         const alumnos = JSON.parse(fs.readFileSync('./datos/alumnosDatos.json'));
